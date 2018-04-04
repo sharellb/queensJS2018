@@ -89,11 +89,15 @@
 				</section>
 				<section>
 					<h3>Oscillator Types</h3>
-					<p id="sine">Sine</p>
-					<p id="square">Square</p>
-					<p id="sawtooth">Sawtooth</p>
-					<p id="triangle">Triangle</p>
-					<img src="oscillator_types.png" height="200" />
+					<div class="oscillatorTypesContent">
+						<img id="oscillatorTypesimg" src="oscillator_types.png" height="200" />
+						<div id="oscillatorTypesSamples">
+							<p id="sine">Sine</p>
+							<p id="square">Square</p>
+							<p id="triangle">Triangle</p>
+							<p id="sawtooth">Sawtooth</p>
+						</div>
+					</div>
 				</section>
 				<section>
 					<h2>Scales are the building blocks for music</h2>
@@ -144,7 +148,7 @@
 					    return semitones;
 					  }
 					</code></pre>
-					<button id="chromatic-scale">Play Chromatic Scale</button>
+					<div id="chromatic-scale" class="playBtn">Play Chromatic Scale</div>
 				</section>
 				<section>
 					<section>
@@ -179,9 +183,55 @@
 						    );
 						  }
 						</code></pre>
-						<button id="major-scale">Play Major Scale</button>
-						<button id="minor-scale">Play Minor Scale</button>
+						<div id="diatonicScaleButtons">
+							<div id="major-scale" class="playBtn">Play Major Scale</div>
+							<div id="minor-scale" class="playBtn">Play Minor Scale</div>
+						</div>
 					</section>
+				</section>
+				<section>
+					<h2>Let's make some melodies</h2>
+				</section>
+				<section>
+					<h2>p5.js</h2>
+					<p>JavaScript library with drawing functionality</p>
+					<p>Can interact with text, input, video, webcam, and sound</p>
+				</section>
+				<section>
+					<h2>p5.sound</h2>
+					<p>Extends p5 with Web Audio API functionality</p>
+				</section>
+				<section>
+					<h2>Let's play a Song</h2>
+					<pre><code class="hljs javascript" data-trim contenteditable>
+						const songPatternA = [1,1,5,5,6,6,5,0,4,4,3,3,2,2,1,0];
+						const songPatternB = [5,5,4,4,3,3,2,0,5,5,4,4,3,3,2,0];
+
+						function setup() {
+						  const twinklePattern = songPatternA.concat(
+						  	songPatternB,songPatternA
+						  );
+
+						  phraseA = new p5.Phrase(
+						  	'twinklePhraseA', playNotes, twinklePattern
+						  );
+
+						  partA = new p5.Part();
+						  partA.addPhrase(phraseA);
+						  partA.setBPM(30);
+						}
+
+						function playNotes(time, note) {
+						  osc = new p5.Oscillator();
+						  osc.setType('sine');
+						  osc.start(time, scaleNotes[note - 1]);
+						  osc.amp(0, 0, 1);
+						  osc.stop(1);
+						}
+
+						partA.start();
+					</code></pre>
+					<div class="playBtn" id="twinkle">Play<div/>
 				</section>
 				<section>
 					<h2>Resources</h2>
@@ -201,8 +251,12 @@
 		</div>
 
 		<script src="lib/js/head.min.js"></script>
+		<script src="p5/p5.min.js"></script>
+   		<script src="p5/addons/p5.dom.min.js"></script>
+   		<script src="p5/addons/p5.sound.min.js"></script>
 		<script src="js/reveal.js"></script>
 		<script src="js/audio.js"></script>
+		<script src="js/sketch.js"></script>
 
 		<script>
 			// More info about config & dependencies:
