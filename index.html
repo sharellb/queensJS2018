@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Music Theory In Your Browser</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/black.css">
@@ -24,13 +24,185 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h2>Exploring Music Theory in Your Browser</h2>
+					<p>Sharell Bryant</p>
+				</section>
+				<section>
+					<section>
+						<h2>Work</h2>
+						<img src="/pusheen_typing.gif"/>
+					</section>
+					<section>
+						<h2>Play</h2>
+						<img src="/aristocats.gif"/>
+					</section>
+					<section>
+						<h2>Work + Play?</h2>
+						<img src="/thinking_face_floating.gif"/>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Web Audio API</h2>
+						<p>JavaScript API in your browser for processing, synthesizing, and analysing audio</p>
+					</section>
+					<section>
+						<pre><code class="hljs javascript" data-trim contenteditable>
+							const audioContext = new (
+								window.AudioContext || window.webkitAudioContext
+							);
+						</code></pre>
+					</section>
+					<section>
+						<h2>Web Audio API</h2>
+						<img src="web_audio_api.svg"/>
+						<p>Audio graph with modular routing</p>
+					</section>
+				</section>
+				<section>
+					<h2>Audio Sources</h2>
+					<p class="fragment">HTML Media elements</p>
+					<p class="fragment">WebRTC MediaStream</p>
+					<p class="fragment"><span class="fragment highlight-blue">JS synthesized audio</span></p>
+				</section>
+				<section>
+					<h2>What is Sound?</h2>
+					<p class="fragment">It's a wave</p>
+				</section>
+				<section>
+					<h2>Sound is a pressure wave</h2>
+					<img src="wave_pressure.gif" />
+					<p>Oscillation of air molecules</p>
+				</section>
+				<section>
+					<h2>Creating sound with Web Audio API</h2>
+				</section>
+				<section>
+					<h2>Oscillator Node</h2>
+					<pre><code class="hljs javascript" data-trim contenteditable>
+						let oscillator = audioContext.createOscillator();
+						let gainNode = audioContext.createGain();
+						oscillator.connect(gainNode);
+						gainNode.connect(audioContext.destination);
+					</code></pre>
+				</section>
+				<section>
+					<h3>Oscillator Types</h3>
+					<p id="sine">Sine</p>
+					<p id="square">Square</p>
+					<p id="sawtooth">Sawtooth</p>
+					<p id="triangle">Triangle</p>
+					<img src="oscillator_types.png" height="200" />
+				</section>
+				<section>
+					<h2>Scales are the building blocks for music</h2>
+				</section>
+				<section>
+					<h2>What's a scale?</h2>
+					<p>A set of musical notes ordered by pitch</p>
+					<p>Allows you to build melodies and harmonies</p>
+					<p>Each scale evokes a different mood</p>
+				</section>
+				<section>
+					<h2>Frequency</h2>
+					<p>Determines the note or the pitch</p>
+					<p>Measure how many times the waveform repeats in a given amount of time</p>
+					<p>Usually measured in Hz (reps per second)</p>
+				</section>
+				<section>
+					<section>
+						<h2>Octave</h2>
+						<img src="octave.png" />
+						<p>Interval between one note and a note double or half its frequency</p>
+					</section>
+					<section>
+						<h2>Octave</h2>
+						<img src="octave_piano.png" />
+						<p>Octave equivalency means that they are named the same note</p>
+					</section>
+				</section>
+				<section>
+					<h2>Chromatic scale</h2>
+					<img src="chromatic_scale.png"/>
+					<p class="fragment">An octave is divided into 12 semitones</p>
+					<p class="fragment">Each note on the piano is a semitone apart</p>
+					<p class="fragment">Equal ratio between notes is 2<sup>(1/12)</sup></p>
+				</section>
+				<section>
+					<h2>Chromatic scale</h2>
+					<pre><code class="hljs javascript" data-trim contenteditable>
+						function computeSemitones(rootNote) {
+					    let currentNote = rootNote;
+					    let semitones = [];
+
+					    for(let i=0; i<=12; i++) {
+					      semitones.push(currentNote);
+					      currentNote *= Math.pow(2, 1/12);
+					    }
+
+					    return semitones;
+					  }
+					</code></pre>
+					<button id="chromatic-scale">Play Chromatic Scale</button>
+				</section>
+				<section>
+					<section>
+						<img src="doremi.gif"/>
+					</section>
+					<section>
+						<h2>Major Diatonic scale</h2>
+						<img src="major_scale.png"/>
+						<p class="fragment">W W H W W W H</p>
+						<p class="fragment">C D E F G A B C</p>
+						<p>Diatonic scales have 5 whole tones</p>
+					</section>
+					<section>
+						<h2>Minor Diatonic scale</h2>
+						<img src="minor_scale.png"/>
+						<p class="fragment">W H W W H W W</p>
+						<p class="fragment">A B C D E F G A</p>
+						<p>Relative minor is 3 semitones below major root note</p>
+					</section>
+					<section>
+						<pre><code class="hljs javascript" data-trim contenteditable>
+							const scalePatterns = {
+							  majorDiatonic: [0,2,4,5,7,9,11,12],
+							  minorDiatonic: [0,2,3,5,7,8,10,12]
+							};
+
+							function computeScale(rootNote, pattern) {
+						    const semitones = this.computeSemitones(rootNote);
+
+						    return scalePatterns[pattern].map(scalePosition =>
+						      semitones[scalePosition]
+						    );
+						  }
+						</code></pre>
+						<button id="major-scale">Play Major Scale</button>
+						<button id="minor-scale">Play Minor Scale</button>
+					</section>
+				</section>
+				<section>
+					<h2>Resources</h2>
+					<ul>
+						<li><a href="https://developer.mozilla.org/en-US/docs/Web/API">Web Audio API Docs</a></li>
+						<li><a href="https://p5js.org/reference/#/libraries/p5.sound">p5.sound Reference docs</a></li>
+						<li><a href="https://pudding.cool/2018/02/waveforms/">Let's Learn about Waveforms by Josh Comeau</a></li>
+					</ul>
+				</section>
+				<section>
+					<img src="/aristocats_3.gif" />
+					<h2>Chat with me about:</h2>
+					<p>Web audio, music, or what we do at Teachers Pay Teachers!</p>
+					<p>@shrell</p>
+				</section>
 			</div>
 		</div>
 
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.js"></script>
+		<script src="js/audio.js"></script>
 
 		<script>
 			// More info about config & dependencies:
